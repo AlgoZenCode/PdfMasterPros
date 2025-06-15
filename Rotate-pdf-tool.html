@@ -1,0 +1,2005 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rotate PDF Online - Free PDF Rotation Tool | PDFMasterPro</title>
+    <meta name="description" content="Rotate PDF pages online for free. Rotate single pages or all pages at once. No watermarks, no file size limits.">
+    <meta name="keywords" content="rotate PDF, flip PDF, PDF rotation, PDF editor, free PDF tools">
+    <meta name="author" content="PDFMasterPro">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://pdfmasterpro.com/rotate-pdf">
+    
+    <!-- Open Graph / Social Media Meta Tags -->
+    <meta property="og:title" content="Rotate PDF Online - Free PDF Rotation Tool | PDFMasterPro">
+    <meta property="og:description" content="Rotate PDF pages online for free. No watermarks, no file size limits.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://pdfmasterpro.com/rotate-pdf">
+    <meta property="og:image" content="https://pdfmasterpro.com/images/rotate-pdf-preview.jpg">
+    
+    <!-- Favicon -->
+    <link rel="icon" href="/favicon.ico" type="image/x-icon">
+    
+    <!-- Font Awesome & Animate.css -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    
+    <!-- PDF-Lib for PDF manipulation -->
+    <script src="https://unpkg.com/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
+    <script src="https://unpkg.com/downloadjs@1.4.7"></script>
+    
+    <!-- PDF.js for rendering thumbnails -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.12.313/pdf.min.js"></script>
+    
+    <!-- Structured Data (JSON-LD) -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "PDFMasterPro - Rotate PDF Tool",
+      "url": "https://pdfmasterpro.com/rotate-pdf",
+      "description": "Free online tool to rotate PDF pages. Rotate single pages or the entire document.",
+      "applicationCategory": "DocumentEditor",
+      "operatingSystem": "Any"
+    }
+    </script>
+    
+    <style>
+        /* Base Styles - Same as Merge PDF tool */
+        :root {
+            --primary: #2563eb;
+            --secondary: #f59e0b;
+            --accent: #10b981;
+            --dark: #1e293b;
+            --darker: #0f172a;
+            --light: #f8fafc;
+            --glass-bg: rgba(37, 99, 235, 0.1);
+            --glass-border: rgba(255, 255, 255, 0.15);
+            --selected: #10b981;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, var(--darker), var(--dark));
+            background-attachment: fixed;
+            background-size: cover;
+            color: var(--light);
+            min-height: 100vh;
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+        
+        /* Glassmorphism Effect */
+        .glass-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-radius: 12px;
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+        }
+        
+        /* Layout */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            width: 100%;
+        }
+        
+        /* Header */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+            position: relative;
+            z-index: 10;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        
+        .logo {
+            font-size: clamp(24px, 5vw, 28px);
+            font-weight: 700;
+            background: linear-gradient(to right, var(--secondary), #f97316);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            flex-shrink: 0;
+        }
+        
+        .logo i {
+            margin-right: 10px;
+            font-size: clamp(26px, 5vw, 32px);
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: clamp(15px, 3vw, 25px);
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        
+        nav a {
+            color: var(--light);
+            text-decoration: none;
+            font-weight: 500;
+            position: relative;
+            padding: 5px 0;
+            font-size: clamp(14px, 2vw, 16px);
+        }
+        
+        nav a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--secondary);
+            transition: width 0.3s ease;
+        }
+        
+        nav a:hover::after {
+            width: 100%;
+        }
+        
+        /* Main Content */
+        .main-content {
+            padding: clamp(40px, 8vw, 60px) 0;
+            text-align: center;
+        }
+        
+        .tool-title {
+            font-size: clamp(32px, 6vw, 42px);
+            margin-bottom: 20px;
+            background: linear-gradient(to right, var(--light), var(--accent));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        
+        .tool-description {
+            font-size: clamp(16px, 3vw, 18px);
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 30px;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        /* Rotate Tool Container */
+        .rotate-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 30px;
+            position: relative;
+        }
+        
+        .drop-area {
+            border: 2px dashed rgba(255, 255, 255, 0.3);
+            border-radius: 12px;
+            padding: 40px 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .drop-area:hover {
+            border-color: var(--accent);
+            background: rgba(16, 185, 129, 0.1);
+        }
+        
+        .drop-area.active {
+            border-color: var(--primary);
+            background: rgba(37, 99, 235, 0.1);
+        }
+        
+        .upload-icon {
+            font-size: 48px;
+            margin-bottom: 15px;
+            color: var(--accent);
+            position: relative;
+            z-index: 2;
+        }
+        
+        /* Floating CTA Button Animation */
+        .floating-cta {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: var(--secondary);
+            color: var(--darker);
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+            cursor: pointer;
+            z-index: 100;
+            transition: all 0.3s ease;
+            animation: bounce 2s infinite;
+        }
+        
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {transform: translateY(0);}
+            40% {transform: translateY(-15px);}
+            60% {transform: translateY(-7px);}
+        }
+        
+        /* Wave animation for floating CTA */
+        .wave-circle {
+            position: absolute;
+            border: 2px solid var(--secondary);
+            border-radius: 50%;
+            opacity: 0;
+            animation: wave 2s infinite;
+            pointer-events: none;
+        }
+        
+        @keyframes wave {
+            0% {
+                transform: scale(0.5);
+                opacity: 0.7;
+            }
+            100% {
+                transform: scale(2);
+                opacity: 0;
+            }
+        }
+        
+        .floating-cta:hover {
+            transform: scale(1.1) rotate(15deg);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+            animation: none;
+        }
+        
+        .upload-text {
+            font-size: 18px;
+            margin-bottom: 10px;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .upload-subtext {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.7);
+            position: relative;
+            z-index: 2;
+        }
+        
+        /* Selected File Display */
+        .selected-file {
+            display: none;
+            margin-top: 20px;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            text-align: left;
+        }
+        
+        .file-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .file-icon {
+            font-size: 36px;
+            color: var(--accent);
+        }
+        
+        .file-details {
+            flex: 1;
+        }
+        
+        .file-name {
+            font-weight: 600;
+            margin-bottom: 5px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        .file-size {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 14px;
+        }
+        
+        .remove-file {
+            color: #ef4444;
+            cursor: pointer;
+            font-size: 20px;
+            transition: all 0.3s ease;
+        }
+        
+        .remove-file:hover {
+            transform: scale(1.2);
+        }
+        
+        /* Result Card */
+        .result-card {
+            display: none;
+            margin-top: 30px;
+            padding: 25px;
+            text-align: left;
+        }
+        
+        .result-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .result-title {
+            font-size: 20px;
+            color: var(--accent);
+        }
+        
+        .result-info {
+            margin-bottom: 20px;
+        }
+        
+        .result-info-item {
+            display: flex;
+            margin-bottom: 8px;
+        }
+        
+        .result-info-label {
+            font-weight: 600;
+            min-width: 120px;
+            color: rgba(255, 255, 255, 0.8);
+        }
+        
+        .result-info-value {
+            flex: 1;
+            color: rgba(255, 255, 255, 0.9);
+        }
+        
+        .filename-input {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 6px;
+            padding: 10px 15px;
+            color: white;
+            width: 100%;
+            font-size: 16px;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+        }
+        
+        .filename-input:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+        
+        /* Proceed Options */
+        .proceed-section {
+            margin-top: 20px;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+        }
+        
+        .proceed-section.expanded {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        
+        .proceed-btn {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.05);
+            border: none;
+            color: var(--light);
+            padding: 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-top: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: all 0.3s ease;
+        }
+        
+        .proceed-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+        
+        .proceed-btn i {
+            transition: transform 0.3s ease;
+        }
+        
+        .proceed-btn.expanded i {
+            transform: rotate(180deg);
+        }
+        
+        .tool-options-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 10px;
+            margin-top: 15px;
+            padding-right: 5px;
+        }
+        
+        .tool-option-btn {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 6px;
+            padding: 12px;
+            color: white;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            text-align: center;
+        }
+        
+        .tool-option-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-2px);
+        }
+        
+        .tool-option-btn.selected {
+            border: 2px solid var(--selected);
+            background: rgba(16, 185, 129, 0.1);
+        }
+        
+        .tool-option-btn i {
+            font-size: 20px;
+            color: var(--accent);
+        }
+        
+        /* Scrollbar styling */
+        .proceed-section::-webkit-scrollbar {
+            width: 6px;
+        }
+        
+        .proceed-section::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 3px;
+        }
+        
+        .proceed-section::-webkit-scrollbar-thumb {
+            background: var(--accent);
+            border-radius: 3px;
+        }
+        
+        .proceed-section::-webkit-scrollbar-thumb:hover {
+            background: #0d9c6e;
+        }
+        
+        /* Action Buttons */
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 30px;
+            flex-wrap: wrap;
+        }
+        
+        .btn {
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: #1d4ed8;
+            transform: translateY(-2px);
+        }
+        
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+        
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+        
+        .btn-success {
+            background: var(--accent);
+            color: white;
+        }
+        
+        .btn-success:hover {
+            background: #0d9c6e;
+            transform: translateY(-2px);
+        }
+        
+        /* Loading Spinner */
+        .spinner {
+            display: none;
+            width: 24px;
+            height: 24px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        /* Progress Bar */
+        .progress-container {
+            width: 100%;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            margin: 20px 0;
+            display: none;
+        }
+        
+        .progress-bar {
+            height: 8px;
+            border-radius: 8px;
+            background-color: var(--accent);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+        
+        /* Ad Containers */
+        .ad-container {
+            width: 100%;
+            margin: 30px 0;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 90px;
+            overflow: hidden;
+        }
+        
+        /* Features Section */
+        .features-section {
+            padding: clamp(40px, 6vw, 60px) 0;
+            background: rgba(0, 0, 0, 0.1);
+        }
+        
+        .section-title {
+            text-align: center;
+            margin-bottom: clamp(25px, 5vw, 40px);
+            font-size: clamp(28px, 5vw, 36px);
+            position: relative;
+            display: inline-block;
+        }
+        
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            border-radius: 3px;
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            padding: 0 10px;
+        }
+        
+        .feature-card {
+            padding: 25px;
+            display: flex;
+            gap: 15px;
+            transition: all 0.3s ease;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+        
+        .feature-icon {
+            font-size: clamp(30px, 4vw, 36px);
+            color: var(--accent);
+            flex-shrink: 0;
+            transition: transform 0.3s ease;
+        }
+        
+        .feature-card:hover .feature-icon {
+            transform: rotate(15deg) scale(1.2);
+        }
+        
+        .feature-content h3 {
+            font-size: clamp(18px, 3vw, 20px);
+            margin-bottom: 10px;
+            color: var(--light);
+        }
+        
+        .feature-content p {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: clamp(14px, 2vw, 15px);
+        }
+        
+        /* Footer */
+        footer {
+            background: rgba(0, 0, 0, 0.2);
+            padding: clamp(40px, 6vw, 60px) 0 clamp(20px, 4vw, 30px);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        footer::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('https://via.placeholder.com/1920x300/1e293b/f8fafc?text=PDFMasterPro') center/cover no-repeat;
+            opacity: 0.05;
+            z-index: -1;
+        }
+        
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 30px;
+            margin-bottom: 30px;
+            padding: 0 15px;
+        }
+        
+        .footer-column h3 {
+            color: var(--secondary);
+            margin-bottom: 15px;
+            font-size: clamp(16px, 2vw, 18px);
+            position: relative;
+            display: inline-block;
+        }
+        
+        .footer-column h3::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 50%;
+            height: 2px;
+            background: var(--accent);
+            transition: width 0.3s ease;
+        }
+        
+        .footer-column:hover h3::after {
+            width: 100%;
+        }
+        
+        .footer-column ul {
+            list-style: none;
+        }
+        
+        .footer-column li {
+            margin-bottom: 8px;
+            transition: all 0.3s ease;
+        }
+        
+        .footer-column li:hover {
+            transform: translateX(5px);
+        }
+        
+        .footer-column a {
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            font-size: clamp(14px, 2vw, 15px);
+            display: block;
+            position: relative;
+            padding-left: 0;
+        }
+        
+        .footer-column a:hover {
+            color: var(--accent);
+            padding-left: 5px;
+        }
+        
+        .social-links {
+            display: flex;
+            gap: 12px;
+            margin-top: 15px;
+        }
+        
+        .social-links a {
+            color: var(--light);
+            font-size: 18px;
+            transition: all 0.3s ease;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 255, 255, 0.1);
+        }
+        
+        .social-links a:hover {
+            color: var(--secondary);
+            transform: translateY(-3px) scale(1.1);
+            background: rgba(255, 255, 255, 0.2);
+        }
+        
+        .copyright {
+            text-align: center;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.5);
+            font-size: clamp(12px, 2vw, 14px);
+            padding: 0 15px;
+        }
+        
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .animate-fade-in {
+            animation: fadeInUp 0.5s ease-out forwards;
+        }
+        
+        /* Editor Screen Styles */
+        #editorScreen {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--dark);
+            z-index: 1000;
+            overflow-y: auto;
+            padding: 20px;
+        }
+        
+        .editor-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .editor-title {
+            font-size: 24px;
+            color: var(--accent);
+        }
+        
+        .close-editor {
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .close-editor:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: rotate(90deg);
+        }
+        
+        .pages-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 80px; /* Space for sticky controls */
+        }
+        
+        .page-container {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            padding: 15px;
+            position: relative;
+        }
+        
+        .page-number {
+            position: absolute;
+            top: 5px;
+            left: 5px;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+        }
+        
+        .page-canvas-container {
+            position: relative;
+            width: 100%;
+            margin-bottom: 10px;
+            overflow: hidden;
+            border-radius: 4px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            background: white;
+        }
+        
+        .page-canvas {
+            width: 100%;
+            height: auto;
+            display: block;
+            transition: transform 0.5s ease;
+        }
+        
+        .page-controls {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .rotate-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            color: white;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .rotate-btn:hover {
+            background: var(--accent);
+            transform: scale(1.1);
+        }
+        
+        .editor-controls {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: var(--darker);
+            padding: 15px 20px;
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            box-shadow: 0 -5px 15px rgba(0, 0, 0, 0.3);
+            z-index: 1001;
+        }
+        
+        .editor-btn {
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        
+        .editor-btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+        
+        .editor-btn-primary:hover {
+            background: #1d4ed8;
+            transform: translateY(-2px);
+        }
+        
+        .editor-btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+        
+        .editor-btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+        
+        .editor-btn-success {
+            background: var(--accent);
+            color: white;
+        }
+        
+        .editor-btn-success:hover {
+            background: #0d9c6e;
+            transform: translateY(-2px);
+        }
+        
+        /* Back Button */
+        .back-btn {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 10;
+        }
+        
+        .back-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+        
+        /* Preview Modal */
+        .preview-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 2000;
+            overflow: auto;
+            padding: 20px;
+        }
+        
+        .preview-content {
+            max-width: 800px;
+            margin: 50px auto;
+            background: var(--dark);
+            border-radius: 8px;
+            padding: 20px;
+            position: relative;
+        }
+        
+        .preview-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .preview-title {
+            font-size: 20px;
+            color: var(--accent);
+        }
+        
+        .close-preview {
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .close-preview:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: rotate(90deg);
+        }
+        
+        .preview-iframe {
+            width: 100%;
+            height: 70vh;
+            border: none;
+            border-radius: 4px;
+            background: white;
+        }
+        
+        /* Mobile styles */
+        @media (max-width: 768px) {
+            .pages-grid {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            }
+            
+            .editor-controls {
+                flex-wrap: wrap;
+            }
+            
+            .editor-btn {
+                padding: 8px 15px;
+                font-size: 14px;
+            }
+            
+            .preview-content {
+                margin: 20px auto;
+                padding: 10px;
+            }
+            
+            .preview-iframe {
+                height: 60vh;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header>
+            <a href="/" class="logo">
+                <i class="fas fa-file-pdf"></i>
+                <span>PDFMasterPro</span>
+            </a>
+            <nav>
+                <ul>
+                    <li><a href="/">Home</a></li>
+                    <li><a href="#features">Features</a></li>
+                    <li><a href="#how-it-works">How It Works</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+            </nav>
+        </header>
+        
+        <!-- Main Content -->
+        <main class="main-content">
+            <h1 class="tool-title animate__animated animate__fadeInDown">Rotate PDF Pages</h1>
+            <p class="tool-description animate__animated animate__fadeInDown animate__delay-1s">
+                Rotate PDF pages 90° clockwise or counter-clockwise. Perfect for correcting scanned documents.
+            </p>
+            
+            <!-- Ad Container (Top) -->
+            <div class="ad-container animate__animated animate__fadeIn animate__delay-2s">
+                <!-- Ad content would go here -->
+                <div style="color: rgba(255,255,255,0.5);">Advertisement</div>
+            </div>
+            
+            <!-- Rotate PDF Tool -->
+            <div class="rotate-container glass-card animate__animated animate__fadeIn animate__delay-3s">
+                <div id="dropArea" class="drop-area">
+                    <div class="upload-icon">
+                        <i class="fas fa-file-pdf"></i>
+                    </div>
+                    <h3 class="upload-text">Drag & Drop PDF File Here</h3>
+                    <p class="upload-subtext">or click to browse your files</p>
+                    <input type="file" id="fileInput" accept=".pdf" style="display: none;">
+                </div>
+                
+                <!-- Selected File Display -->
+                <div id="selectedFile" class="selected-file glass-card">
+                    <div class="file-info">
+                        <div class="file-icon">
+                            <i class="fas fa-file-pdf"></i>
+                        </div>
+                        <div class="file-details">
+                            <div class="file-name" id="fileName"></div>
+                            <div class="file-size" id="fileSizeDisplay"></div>
+                        </div>
+                        <div class="remove-file" id="removeFileBtn">
+                            <i class="fas fa-times"></i>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Progress Bar -->
+                <div id="progressContainer" class="progress-container">
+                    <div id="progressBar" class="progress-bar"></div>
+                </div>
+                
+                <div class="action-buttons">
+                    <button id="rotateBtn" class="btn btn-primary" disabled>
+                        <span id="rotateText">Rotate PDF</span>
+                        <div id="spinner" class="spinner"></div>
+                    </button>
+                    <button id="clearBtn" class="btn btn-secondary">
+                        <i class="fas fa-trash-alt"></i> Clear
+                    </button>
+                </div>
+                
+                <!-- Result Card -->
+                <div id="resultCard" class="result-card glass-card">
+                    <button class="back-btn" id="backToEditorBtn">
+                        <i class="fas fa-arrow-left"></i> Back to Editor
+                    </button>
+                    
+                    <div class="result-header">
+                        <h3 class="result-title">PDF Rotation Complete!</h3>
+                        <div class="file-size" id="rotatedFileSize"></div>
+                    </div>
+                    
+                    <div class="result-info">
+                        <div class="result-info-item">
+                            <span class="result-info-label">File Name:</span>
+                            <input type="text" id="filenameInput" class="filename-input" value="rotated-document.pdf" placeholder="Enter file name">
+                        </div>
+                        <div class="result-info-item">
+                            <span class="result-info-label">Total Pages:</span>
+                            <span class="result-info-value" id="totalPages"></span>
+                        </div>
+                        <div class="result-info-item">
+                            <span class="result-info-label">File Size:</span>
+                            <span class="result-info-value" id="fileSize"></span>
+                        </div>
+                        <div class="result-info-item">
+                            <span class="result-info-label">Rotation:</span>
+                            <span class="result-info-value" id="rotationInfo"></span>
+                        </div>
+                    </div>
+                    
+                    <div class="action-buttons">
+                        <button id="previewBtn" class="btn btn-secondary">
+                            <i class="fas fa-eye"></i> Preview PDF
+                        </button>
+                        <button id="downloadBtn" class="btn btn-success">
+                            <i class="fas fa-download"></i> Download PDF
+                        </button>
+                        <button id="newRotateBtn" class="btn btn-secondary">
+                            <i class="fas fa-plus"></i> New Rotation
+                        </button>
+                    </div>
+                    
+                    <!-- Proceed Section -->
+                    <button class="proceed-btn" id="proceedBtn">
+                        <span>Proceed with this PDF</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    
+                    <div class="proceed-section" id="proceedSection">
+                        <div class="tool-options-grid">
+                            <button class="tool-option-btn" data-tool="compress">
+                                <i class="fas fa-compress-alt"></i>
+                                <span>Compress PDF</span>
+                            </button>
+                            <button class="tool-option-btn" data-tool="split">
+                                <i class="fas fa-cut"></i>
+                                <span>Split PDF</span>
+                            </button>
+                            <button class="tool-option-btn" data-tool="merge">
+                                <i class="fas fa-object-group"></i>
+                                <span>Merge PDF</span>
+                            </button>
+                            <button class="tool-option-btn" data-tool="protect">
+                                <i class="fas fa-lock"></i>
+                                <span>Protect PDF</span>
+                            </button>
+                            <button class="tool-option-btn" data-tool="convert-word">
+                                <i class="fas fa-file-word"></i>
+                                <span>PDF to Word</span>
+                            </button>
+                            <button class="tool-option-btn" data-tool="convert-excel">
+                                <i class="fas fa-file-excel"></i>
+                                <span>PDF to Excel</span>
+                            </button>
+                            <button class="tool-option-btn" data-tool="convert-jpg">
+                                <i class="fas fa-file-image"></i>
+                                <span>PDF to JPG</span>
+                            </button>
+                            <button class="tool-option-btn" data-tool="edit">
+                                <i class="fas fa-edit"></i>
+                                <span>Edit PDF</span>
+                            </button>
+                            <button class="tool-option-btn" data-tool="ocr">
+                                <i class="fas fa-text-height"></i>
+                                <span>OCR PDF</span>
+                            </button>
+                            <button class="tool-option-btn" data-tool="watermark">
+                                <i class="fas fa-stamp"></i>
+                                <span>Watermark</span>
+                            </button>
+                            <button class="tool-option-btn" data-tool="organize">
+                                <i class="fas fa-layer-group"></i>
+                                <span>Organize Pages</span>
+                            </button>
+                            <button class="tool-option-btn" data-tool="repair">
+                                <i class="fas fa-wrench"></i>
+                                <span>Repair PDF</span>
+                            </button>
+                            <button class="tool-option-btn" data-tool="sign">
+                                <i class="fas fa-signature"></i>
+                                <span>Sign PDF</span>
+                            </button>
+                            <button class="tool-option-btn" data-tool="annotate">
+                                <i class="fas fa-highlighter"></i>
+                                <span>Annotate</span>
+                            </button>
+                            <button class="tool-option-btn" data-tool="flatten">
+                                <i class="fas fa-square"></i>
+                                <span>Flatten PDF</span>
+                            </button>
+                            <button class="tool-option-btn" data-tool="extract">
+                                <i class="fas fa-file-export"></i>
+                                <span>Extract Pages</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Ad Container (Middle) -->
+            <div class="ad-container">
+                <!-- Ad content would go here -->
+                <div style="color: rgba(255,255,255,0.5);">Advertisement</div>
+            </div>
+            
+            <!-- How It Works Section -->
+            <section id="how-it-works" class="features-section">
+                <h2 class="section-title">How to Rotate PDF Pages</h2>
+                <div class="features-grid">
+                    <div class="feature-card glass-card animate-fade-in" style="animation-delay: 0.1s">
+                        <div class="feature-icon">
+                            <i class="fas fa-upload"></i>
+                        </div>
+                        <div class="feature-content">
+                            <h3>Upload PDF File</h3>
+                            <p>Drag and drop your PDF file or click to browse your computer.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="feature-card glass-card animate-fade-in" style="animation-delay: 0.2s">
+                        <div class="feature-icon">
+                            <i class="fas fa-sync-alt"></i>
+                        </div>
+                        <div class="feature-content">
+                            <h3>Rotate Pages</h3>
+                            <p>Choose to rotate all pages or proceed to editor for selective rotation.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="feature-card glass-card animate-fade-in" style="animation-delay: 0.3s">
+                        <div class="feature-icon">
+                            <i class="fas fa-download"></i>
+                        </div>
+                        <div class="feature-content">
+                            <h3>Download Result</h3>
+                            <p>Download your rotated PDF file instantly with corrected orientation.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Features Section -->
+            <section id="features" class="features-section">
+                <h2 class="section-title">Why Use Our PDF Rotator?</h2>
+                <div class="features-grid">
+                    <div class="feature-card glass-card animate-fade-in" style="animation-delay: 0.1s">
+                        <div class="feature-icon">
+                            <i class="fas fa-lock"></i>
+                        </div>
+                        <div class="feature-content">
+                            <h3>Secure Processing</h3>
+                            <p>Your files are processed in your browser and never uploaded to our servers.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="feature-card glass-card animate-fade-in" style="animation-delay: 0.2s">
+                        <div class="feature-icon">
+                            <i class="fas fa-infinity"></i>
+                        </div>
+                        <div class="feature-content">
+                            <h3>No Limits</h3>
+                            <p>Rotate PDFs of any size with no restrictions on number of pages.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="feature-card glass-card animate-fade-in" style="animation-delay: 0.3s">
+                        <div class="feature-icon">
+                            <i class="fas fa-mobile-alt"></i>
+                        </div>
+                        <div class="feature-content">
+                            <h3>Works Everywhere</h3>
+                            <p>Use our tool on any device - computer, tablet or smartphone.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Ad Container (Bottom) -->
+            <div class="ad-container">
+                <!-- Ad content would go here -->
+                <div style="color: rgba(255,255,255,0.5);">Advertisement</div>
+            </div>
+        </main>
+        
+        <!-- Footer -->
+        <footer id="contact" class="animate__animated animate__fadeInUp">
+            <div class="container">
+                <div class="footer-content">
+                    <div class="footer-column">
+                        <h3>PDF Tools</h3>
+                        <ul>
+                            <li><a href="/rotate-pdf">Rotate PDF</a></li>
+                            <li><a href="/merge-pdf">Merge PDF</a></li>
+                            <li><a href="/compress-pdf">Compress PDF</a></li>
+                            <li><a href="/pdf-to-word">PDF to Word</a></li>
+                        </ul>
+                    </div>
+                    
+                    <div class="footer-column">
+                        <h3>Resources</h3>
+                        <ul>
+                            <li><a href="/blog">Blog</a></li>
+                            <li><a href="/tutorials">Tutorials</a></li>
+                            <li><a href="/help">Help Center</a></li>
+                            <li><a href="/faq">FAQ</a></li>
+                        </ul>
+                    </div>
+                    
+                    <div class="footer-column">
+                        <h3>Company</h3>
+                        <ul>
+                            <li><a href="/about">About Us</a></li>
+                            <li><a href="/privacy">Privacy Policy</a></li>
+                            <li><a href="/terms">Terms of Service</a></li>
+                            <li><a href="/contact">Contact Us</a></li>
+                        </ul>
+                    </div>
+                    
+                    <div class="footer-column">
+                        <h3>Connect With Us</h3>
+                        <ul>
+                            <li><a href="https://facebook.com/pdfmasterpro" target="_blank">Facebook</a></li>
+                            <li><a href="https://twitter.com/pdfmasterpro" target="_blank">Twitter</a></li>
+                            <li><a href="https://linkedin.com/company/pdfmasterpro" target="_blank">LinkedIn</a></li>
+                        </ul>
+                        <div class="social-links">
+                            <a href="https://facebook.com/pdfmasterpro" target="_blank"><i class="fab fa-facebook"></i></a>
+                            <a href="https://twitter.com/pdfmasterpro" target="_blank"><i class="fab fa-twitter"></i></a>
+                            <a href="https://instagram.com/pdfmasterpro" target="_blank"><i class="fab fa-instagram"></i></a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="copyright">
+                    <p>&copy; 2023 PDFMasterPro. All rights reserved. | Serving over 1 million users monthly</p>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Editor Screen (Hidden by default) -->
+    <div id="editorScreen">
+        <div class="editor-header">
+            <h2 class="editor-title">PDF Page Rotation Editor</h2>
+            <button class="close-editor" id="closeEditorBtn">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        
+        <div id="pagesGrid" class="pages-grid">
+            <!-- Pages will be dynamically inserted here -->
+        </div>
+        
+        <div class="editor-controls">
+            <button class="editor-btn editor-btn-secondary" id="rotateAllLeftBtn">
+                <i class="fas fa-undo"></i> Rotate All Left
+            </button>
+            <button class="editor-btn editor-btn-secondary" id="rotateAllRightBtn">
+                <i class="fas fa-redo"></i> Rotate All Right
+            </button>
+            <button class="editor-btn editor-btn-success" id="saveRotationBtn">
+                <i class="fas fa-save"></i> Save Rotations
+            </button>
+        </div>
+    </div>
+
+    <!-- Preview Modal -->
+    <div id="previewModal" class="preview-modal">
+        <div class="preview-content glass-card">
+            <div class="preview-header">
+                <h3 class="preview-title">PDF Preview</h3>
+                <button class="close-preview" id="closePreviewBtn">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <iframe id="previewIframe" class="preview-iframe"></iframe>
+        </div>
+    </div>
+
+    <!-- Floating CTA Button with Wave Animation -->
+    <div class="floating-cta animate__animated animate__bounceInRight animate__delay-2s" id="floatingCta">
+        <i class="fas fa-file-upload"></i>
+    </div>
+
+    <!-- Rotate PDF Script -->
+    <script>
+        // DOM Elements
+        const dropArea = document.getElementById('dropArea');
+        const fileInput = document.getElementById('fileInput');
+        const selectedFile = document.getElementById('selectedFile');
+        const fileName = document.getElementById('fileName');
+        const fileSizeDisplay = document.getElementById('fileSizeDisplay');
+        const removeFileBtn = document.getElementById('removeFileBtn');
+        const rotateBtn = document.getElementById('rotateBtn');
+        const clearBtn = document.getElementById('clearBtn');
+        const floatingCta = document.getElementById('floatingCta');
+        const spinner = document.getElementById('spinner');
+        const rotateText = document.getElementById('rotateText');
+        const progressContainer = document.getElementById('progressContainer');
+        const progressBar = document.getElementById('progressBar');
+        const resultCard = document.getElementById('resultCard');
+        const filenameInput = document.getElementById('filenameInput');
+        const totalPagesEl = document.getElementById('totalPages');
+        const fileSizeEl = document.getElementById('fileSize');
+        const rotationInfoEl = document.getElementById('rotationInfo');
+        const rotatedFileSizeEl = document.getElementById('rotatedFileSize');
+        const downloadBtn = document.getElementById('downloadBtn');
+        const previewBtn = document.getElementById('previewBtn');
+        const newRotateBtn = document.getElementById('newRotateBtn');
+        const backToEditorBtn = document.getElementById('backToEditorBtn');
+        const proceedBtn = document.getElementById('proceedBtn');
+        const proceedSection = document.getElementById('proceedSection');
+        const toolOptionBtns = document.querySelectorAll('.tool-option-btn');
+        const editorScreen = document.getElementById('editorScreen');
+        const pagesGrid = document.getElementById('pagesGrid');
+        const closeEditorBtn = document.getElementById('closeEditorBtn');
+        const rotateAllLeftBtn = document.getElementById('rotateAllLeftBtn');
+        const rotateAllRightBtn = document.getElementById('rotateAllRightBtn');
+        const saveRotationBtn = document.getElementById('saveRotationBtn');
+        const previewModal = document.getElementById('previewModal');
+        const previewIframe = document.getElementById('previewIframe');
+        const closePreviewBtn = document.getElementById('closePreviewBtn');
+        
+        // Store uploaded file and rotated PDF
+        let pdfFile = null;
+        let rotatedPdfBytes = null;
+        let pdfInfo = {
+            pageCount: 0,
+            fileSize: 0,
+            rotation: 'No rotation applied'
+        };
+        
+        // For editor screen
+        let pageRotations = [];
+        let pdfDoc = null;
+        
+        // Initialize PDF.js worker
+        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.12.313/pdf.worker.min.js';
+        
+        // Add wave animation to floating CTA
+        function addWaveAnimation() {
+            const waves = [];
+            
+            // Create 3 wave circles
+            for (let i = 0; i < 3; i++) {
+                const wave = document.createElement('div');
+                wave.className = 'wave-circle';
+                wave.style.width = '56px';
+                wave.style.height = '56px';
+                wave.style.position = 'absolute';
+                wave.style.top = '0';
+                wave.style.left = '0';
+                wave.style.animationDelay = `${i * 0.3}s`;
+                floatingCta.appendChild(wave);
+                waves.push(wave);
+            }
+            
+            return waves;
+        }
+        
+        // Initialize wave animation
+        const waveCircles = addWaveAnimation();
+        
+        // Event Listeners
+        dropArea.addEventListener('click', () => fileInput.click());
+        
+        fileInput.addEventListener('change', (e) => {
+            if (e.target.files.length > 0) {
+                handleFile(e.target.files[0]);
+            }
+            fileInput.value = '';
+        });
+        
+        dropArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            dropArea.classList.add('active');
+        });
+        
+        dropArea.addEventListener('dragleave', () => {
+            dropArea.classList.remove('active');
+        });
+        
+        dropArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dropArea.classList.remove('active');
+            if (e.dataTransfer.files.length > 0) {
+                handleFile(e.dataTransfer.files[0]);
+            }
+        });
+        
+        removeFileBtn.addEventListener('click', clearFile);
+        rotateBtn.addEventListener('click', openEditor);
+        clearBtn.addEventListener('click', clearFile);
+        floatingCta.addEventListener('click', () => fileInput.click());
+        downloadBtn.addEventListener('click', downloadRotatedPDF);
+        previewBtn.addEventListener('click', previewRotatedPDF);
+        newRotateBtn.addEventListener('click', resetTool);
+        backToEditorBtn.addEventListener('click', backToEditor);
+        closePreviewBtn.addEventListener('click', closePreview);
+        
+        // Editor screen events
+        closeEditorBtn.addEventListener('click', closeEditor);
+        rotateAllLeftBtn.addEventListener('click', () => rotateAllPagesInEditor(-90));
+        rotateAllRightBtn.addEventListener('click', () => rotateAllPagesInEditor(90));
+        saveRotationBtn.addEventListener('click', applyPageRotations);
+        
+        // Proceed section toggle
+        proceedBtn.addEventListener('click', () => {
+            proceedBtn.classList.toggle('expanded');
+            proceedSection.classList.toggle('expanded');
+        });
+        
+        // Tool option buttons
+        toolOptionBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                // Remove selected class from all buttons
+                toolOptionBtns.forEach(b => b.classList.remove('selected'));
+                
+                // Add selected class to clicked button
+                btn.classList.add('selected');
+                const selectedTool = btn.dataset.tool;
+                
+                // Proceed to tool after a short delay to show selection
+                setTimeout(() => proceedToTool(selectedTool), 300);
+            });
+        });
+        
+        // Handle uploaded file
+        function handleFile(file) {
+            if (file.type !== 'application/pdf') {
+                showToast('Please select a PDF file', 'error');
+                return;
+            }
+            
+            pdfFile = file;
+            
+            // Show selected file
+            fileName.textContent = file.name;
+            fileSizeDisplay.textContent = formatFileSize(file.size);
+            selectedFile.style.display = 'block';
+            rotateBtn.disabled = false;
+            
+            // Get file info
+            pdfInfo = {
+                pageCount: 0,
+                fileSize: file.size,
+                rotation: 'No rotation applied'
+            };
+            
+            // Load PDF to get page count
+            const reader = new FileReader();
+            reader.onload = async function(e) {
+                try {
+                    const typedArray = new Uint8Array(e.target.result);
+                    const pdf = await pdfjsLib.getDocument(typedArray).promise;
+                    pdfInfo.pageCount = pdf.numPages;
+                    
+                    showToast('PDF loaded successfully', 'success');
+                } catch (error) {
+                    console.error('Error loading PDF:', error);
+                    showToast('Error loading PDF. Please try another file.', 'error');
+                    clearFile();
+                }
+            };
+            reader.readAsArrayBuffer(file);
+        }
+        
+        // Format file size
+        function formatFileSize(bytes) {
+            if (bytes === 0) return '0 Bytes';
+            
+            const k = 1024;
+            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+        }
+        
+        // Clear the file
+        function clearFile() {
+            pdfFile = null;
+            selectedFile.style.display = 'none';
+            rotateBtn.disabled = true;
+            resultCard.style.display = 'none';
+            
+            showToast('File cleared', 'info');
+        }
+        
+        // Open the editor screen
+        async function openEditor() {
+            if (!pdfFile) {
+                showToast('Please select a PDF file first', 'error');
+                return;
+            }
+            
+            try {
+                // Show loading state with progress bar
+                rotateBtn.disabled = true;
+                rotateText.innerHTML = '<div class="spinner" style="display:inline-block;"></div> Loading...';
+                progressContainer.style.display = 'block';
+                
+                // Simulate progress
+                let progress = 0;
+                const progressInterval = setInterval(() => {
+                    progress += 5;
+                    progressBar.style.width = `${Math.min(progress, 90)}%`;
+                    if (progress >= 90) clearInterval(progressInterval);
+                }, 100);
+                
+                const arrayBuffer = await pdfFile.arrayBuffer();
+                pdfDoc = await PDFLib.PDFDocument.load(arrayBuffer);
+                
+                // Initialize page rotations array
+                pageRotations = Array(pdfDoc.getPageCount()).fill(0);
+                
+                // Render pages in editor
+                await renderPagesInEditor();
+                
+                // Complete progress
+                progressBar.style.width = '100%';
+                setTimeout(() => {
+                    progressContainer.style.display = 'none';
+                    progressBar.style.width = '0%';
+                }, 500);
+                
+                // Show editor screen
+                editorScreen.style.display = 'block';
+                document.body.style.overflow = 'hidden';
+                
+            } catch (error) {
+                console.error('Error opening editor:', error);
+                showToast('Error opening editor. Please try again.', 'error');
+                progressContainer.style.display = 'none';
+                progressBar.style.width = '0%';
+            } finally {
+                // Reset button state
+                rotateBtn.disabled = false;
+                rotateText.textContent = 'Rotate PDF';
+            }
+        }
+        
+        // Close the editor screen
+        function closeEditor() {
+            editorScreen.style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+        
+        // Back to editor from result screen
+        function backToEditor() {
+            resultCard.style.display = 'none';
+            editorScreen.style.display = 'block';
+            document.body.style.overflow = 'hidden';
+        }
+        
+        // Render PDF pages in editor
+        async function renderPagesInEditor() {
+            pagesGrid.innerHTML = '';
+            
+            // Load with PDF.js for rendering
+            const loadingTask = pdfjsLib.getDocument(await pdfFile.arrayBuffer());
+            const pdf = await loadingTask.promise;
+            
+            for (let i = 0; i < pdf.numPages; i++) {
+                const page = await pdf.getPage(i + 1);
+                const viewport = page.getViewport({ scale: 0.5 });
+                
+                // Create page container
+                const pageContainer = document.createElement('div');
+                pageContainer.className = 'page-container';
+                
+                // Add page number
+                const pageNumber = document.createElement('div');
+                pageNumber.className = 'page-number';
+                pageNumber.textContent = `Page ${i + 1}`;
+                pageContainer.appendChild(pageNumber);
+                
+                // Create canvas container
+                const canvasContainer = document.createElement('div');
+                canvasContainer.className = 'page-canvas-container';
+                
+                // Create canvas for page
+                const canvas = document.createElement('canvas');
+                canvas.className = 'page-canvas';
+                const context = canvas.getContext('2d');
+                canvas.height = viewport.height;
+                canvas.width = viewport.width;
+                
+                // Render page
+                await page.render({
+                    canvasContext: context,
+                    viewport: viewport
+                }).promise;
+                
+                canvasContainer.appendChild(canvas);
+                pageContainer.appendChild(canvasContainer);
+                
+                // Create rotation controls
+                const controls = document.createElement('div');
+                controls.className = 'page-controls';
+                
+                const rotateLeftBtn = document.createElement('button');
+                rotateLeftBtn.className = 'rotate-btn';
+                rotateLeftBtn.innerHTML = '<i class="fas fa-undo"></i>';
+                rotateLeftBtn.title = 'Rotate 90° counter-clockwise';
+                rotateLeftBtn.dataset.pageIndex = i;
+                rotateLeftBtn.addEventListener('click', () => rotatePage(i, -90));
+                
+                const rotateRightBtn = document.createElement('button');
+                rotateRightBtn.className = 'rotate-btn';
+                rotateRightBtn.innerHTML = '<i class="fas fa-redo"></i>';
+                rotateRightBtn.title = 'Rotate 90° clockwise';
+                rotateRightBtn.dataset.pageIndex = i;
+                rotateRightBtn.addEventListener('click', () => rotatePage(i, 90));
+                
+                controls.appendChild(rotateLeftBtn);
+                controls.appendChild(rotateRightBtn);
+                pageContainer.appendChild(controls);
+                
+                pagesGrid.appendChild(pageContainer);
+            }
+        }
+        
+        // Rotate a single page in the editor with smooth animation
+        function rotatePage(pageIndex, degrees) {
+            // Update rotation for this page
+            pageRotations[pageIndex] += degrees;
+            
+            // Normalize to 0-360 range
+            pageRotations[pageIndex] = (pageRotations[pageIndex] % 360 + 360) % 360;
+            
+            // Get the canvas container for this page
+            const pageContainer = pagesGrid.children[pageIndex];
+            const canvas = pageContainer.querySelector('.page-canvas');
+            
+            // Apply smooth rotation animation
+            canvas.style.transition = 'transform 0.5s ease';
+            canvas.style.transform = `rotate(${pageRotations[pageIndex]}deg)`;
+            
+            // Remove transition after animation completes
+            setTimeout(() => {
+                canvas.style.transition = 'none';
+            }, 500);
+        }
+        
+        // Rotate all pages in the editor
+        function rotateAllPagesInEditor(degrees) {
+            for (let i = 0; i < pageRotations.length; i++) {
+                rotatePage(i, degrees);
+            }
+        }
+        
+        // Apply page rotations and save the PDF
+        async function applyPageRotations() {
+            try {
+                // Show loading state
+                saveRotationBtn.disabled = true;
+                saveRotationBtn.innerHTML = '<div class="spinner" style="display:inline-block;"></div> Saving...';
+                
+                // Create a new PDF document to hold rotated pages
+                const { PDFDocument, degrees } = PDFLib;
+                const newPdfDoc = await PDFDocument.create();
+                
+                // Copy each page with its rotation
+                for (let i = 0; i < pdfDoc.getPageCount(); i++) {
+                    const [copiedPage] = await newPdfDoc.copyPages(pdfDoc, [i]);
+                    newPdfDoc.addPage(copiedPage);
+                    
+                    // Apply rotation
+                    const page = newPdfDoc.getPage(i);
+                    const rotation = pageRotations[i];
+                    if (rotation !== 0) {
+                        page.setRotation(degrees(rotation));
+                    }
+                }
+                
+                // Save the rotated PDF
+                rotatedPdfBytes = await newPdfDoc.save();
+                
+                // Update PDF info
+                pdfInfo.rotation = 'Custom page rotations applied';
+                pdfInfo.fileSize = rotatedPdfBytes.byteLength;
+                
+                // Close editor and show result
+                closeEditor();
+                showResultCard();
+                
+            } catch (error) {
+                console.error('Error applying rotations:', error);
+                showToast('Error saving rotations. Please try again.', 'error');
+            } finally {
+                // Reset button state
+                saveRotationBtn.disabled = false;
+                saveRotationBtn.innerHTML = '<i class="fas fa-save"></i> Save Rotations';
+            }
+        }
+        
+        // Show result card with rotated PDF info
+        function showResultCard() {
+            resultCard.style.display = 'block';
+            
+            // Update result info
+            totalPagesEl.textContent = pdfInfo.pageCount;
+            fileSizeEl.textContent = formatFileSize(pdfInfo.fileSize);
+            rotationInfoEl.textContent = pdfInfo.rotation;
+            rotatedFileSizeEl.textContent = formatFileSize(pdfInfo.fileSize);
+            
+            // Scroll to result card
+            resultCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            
+            showToast('PDF rotation complete!', 'success');
+        }
+        
+        // Download rotated PDF
+        function downloadRotatedPDF() {
+            if (!rotatedPdfBytes) return;
+            
+            const filename = filenameInput.value.endsWith('.pdf') ? 
+                filenameInput.value : 
+                `${filenameInput.value}.pdf`;
+            
+            const blob = new Blob([rotatedPdfBytes], { type: 'application/pdf' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            
+            // Clean up
+            setTimeout(() => {
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+            }, 100);
+            
+            showToast('Download started!', 'success');
+        }
+        
+        // Preview rotated PDF
+        function previewRotatedPDF() {
+            if (!rotatedPdfBytes) return;
+            
+            const blob = new Blob([rotatedPdfBytes], { type: 'application/pdf' });
+            const url = URL.createObjectURL(blob);
+            previewIframe.src = url;
+            previewModal.style.display = 'block';
+            document.body.style.overflow = 'hidden';
+        }
+        
+        // Close preview modal
+        function closePreview() {
+            previewModal.style.display = 'none';
+            document.body.style.overflow = 'auto';
+            previewIframe.src = '';
+        }
+        
+        // Proceed to another tool with the rotated PDF
+        function proceedToTool(tool) {
+            if (!rotatedPdfBytes) return;
+            
+            // In a real implementation, this would redirect to the appropriate tool
+            // with the rotated PDF data passed along
+            showToast(`Redirecting to ${tool} tool...`, 'info');
+            
+            // For demo purposes, we'll just show a message
+            setTimeout(() => {
+                alert(`In a real implementation, this would take you to the ${tool} tool with your rotated PDF ready for further processing.`);
+                
+                // Reset selection after proceeding
+                toolOptionBtns.forEach(b => b.classList.remove('selected'));
+            }, 300);
+        }
+        
+        // Reset the tool for a new rotation
+        function resetTool() {
+            pdfFile = null;
+            rotatedPdfBytes = null;
+            pdfInfo = {
+                pageCount: 0,
+                fileSize: 0,
+                rotation: 'No rotation applied'
+            };
+            
+            selectedFile.style.display = 'none';
+            rotateBtn.disabled = true;
+            resultCard.style.display = 'none';
+            filenameInput.value = 'rotated-document.pdf';
+            proceedSection.classList.remove('expanded');
+            proceedBtn.classList.remove('expanded');
+            
+            // Reset any selected tool
+            toolOptionBtns.forEach(b => b.classList.remove('selected'));
+            
+            showToast('Ready for new rotation', 'info');
+        }
+        
+        // Show toast notification
+        function showToast(message, type = 'info') {
+            // Remove existing toasts
+            const existingToasts = document.querySelectorAll('.toast');
+            existingToasts.forEach(toast => toast.remove());
+            
+            const toast = document.createElement('div');
+            toast.className = `toast toast-${type}`;
+            toast.textContent = message;
+            document.body.appendChild(toast);
+            
+            // Position toast
+            toast.style.position = 'fixed';
+            toast.style.bottom = '20px';
+            toast.style.left = '50%';
+            toast.style.transform = 'translateX(-50%)';
+            toast.style.padding = '12px 24px';
+            toast.style.borderRadius = '8px';
+            toast.style.backgroundColor = type === 'error' ? '#ef4444' : 
+                                         type === 'success' ? '#10b981' : 
+                                         type === 'warning' ? '#f59e0b' : '#3b82f6';
+            toast.style.color = 'white';
+            toast.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.15)';
+            toast.style.zIndex = '1000';
+            toast.style.animation = 'fadeInUp 0.3s ease-out';
+            
+            // Auto remove after 3 seconds
+            setTimeout(() => {
+                toast.style.animation = 'fadeOut 0.3s ease-out forwards';
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+        
+        // Scroll animation
+        const animateOnScroll = () => {
+            const elements = document.querySelectorAll('.animate-fade-in');
+            
+            elements.forEach(element => {
+                const elementPosition = element.getBoundingClientRect().top;
+                const screenPosition = window.innerHeight / 1.3;
+                
+                if (elementPosition < screenPosition) {
+                    element.style.animation = `fadeInUp 0.5s forwards ${element.dataset.animationDelay || '0s'}`;
+                }
+            });
+        };
+        
+        window.addEventListener('scroll', animateOnScroll);
+        document.addEventListener('DOMContentLoaded', animateOnScroll);
+    </script>
+</body>
+</html>
